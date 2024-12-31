@@ -1,0 +1,58 @@
+In a FastAPI project, the folder for authentication (`auth`) logic should typically be placed in the **`app/`** directory (or your main application folder). It’s common to separate it into its own folder to maintain modularity and readability.
+
+---
+
+### Recommended Placement
+
+**Structure:**
+
+```
+zoo-animals-service/
+├── app/
+│   ├── auth/            # Authentication logic
+│   │   ├── jwt.py       # JWT handling (token generation/validation)
+│   │   ├── models.py    # Auth-related models (e.g., User, Role)
+│   │   ├── routes.py    # Authentication-related API routes (login, register)
+│   │   ├── services.py  # Business logic for authentication
+│   │   ├── utils.py     # Helper functions (e.g., password hashing)
+│   ├── routers/         # API endpoints
+│   ├── models/          # Database models
+│   ├── schemas/         # Pydantic schemas
+│   ├── services/        # Business logic for other domains
+│   ├── constants.py     # Constants (e.g., roles)
+│   ├── __init__.py      # Package initialization
+├── alembic/             # Database migrations
+├── main.py              # FastAPI entry point
+```
+
+---
+
+### Why Use an `auth/` Folder?
+1. **Separation of Concerns**:
+   - Keeps all authentication-related code (JWT, password handling, user roles) in one place.
+2. **Scalability**:
+   - As your project grows, modularity ensures maintainability.
+3. **Reusability**:
+   - Helper functions in `auth/utils.py` (e.g., password hashing) can be reused across the app.
+
+---
+
+### Key Components of the `auth/` Folder
+1. **`jwt.py`**:
+   - Handles token creation, validation, and expiration logic.
+
+2. **`models.py`**:
+   - Defines authentication-related database models (e.g., `User`, `Role`).
+
+3. **`routes.py`**:
+   - Defines endpoints for authentication, like `login` and `register`.
+
+4. **`services.py`**:
+   - Contains reusable authentication logic, such as verifying user credentials.
+
+5. **`utils.py`**:
+   - Includes helper functions, like hashing passwords or extracting user claims from tokens.
+
+---
+
+This structure makes your project modular and enterprise-ready, while keeping authentication logic clean and manageable.

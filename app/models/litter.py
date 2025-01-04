@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, func, Integer, ForeignKey
+from sqlalchemy import Column, String, DateTime, ForeignKey, ARRAY, func, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, validates
 from uuid import uuid4
@@ -8,30 +8,24 @@ import pytz
 # Local
 from app.database import Base
 
-#TODO is the relationship for breeding, litter, and offspring right!!
-# TODO  create teh animals produced!!!!
-#TODO the one-to-one here is probabaly wrong!!!
 
 class Litter(Base):
     __tablename__ = "litter"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    breeding_id = Column(UUID(as_uuid=True),ForeignKey("breeding.id", ondelete="CASCADE"), unique=True)
-    size = Column(Integer, nullable=False)
-    birth_date = Column(DateTime(timezone=True), nullable=False)
-    description = Column(String(1000), nullable=True)
+    breeding_id = Column(UUID(as_uuid=True), ForeignKey("breeding.id", ondelete="CASCADE"), nullable=False)  # Link to the breeding event
+    offspring_ids = Column(ARRAY(UUID(as_uuid=True)), nullable=False)
+    size = Column(Integer, nullable=False)  # Number of offspring in the litter
+    birth_date = Column(DateTime(timezone=True), nullable=False)  # Timestamp of birth
+    enclosure_id = Column(UUID(as_uuid=True), nullable=False)  # Reference to zoo-enclosures-service
+    description = Column(String(1000), nullable=True)  # Optional details about the litter
 
-    # Timestamps - keep track of when entry was created and updated. maybe need in future
+    # Timestamps - keep track of when entry was created and updated
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(pytz.UTC), nullable=False, name="created_at")
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(pytz.UTC), onupdate=func.now(), nullable=False, name="updated_at")
 
-
-    # Relationship to breeding (one-to-one)
+    # Relationship to Breeding (one-to-one)
     breeding = relationship("Breeding", back_populates="litter")
-
-    # Relation to animals in the litter, so the offspring (many-to-many)
-    # offspring = relationship("Animal", back_populates="litter", cascade="all, delete")
-
 
     @validates('created_at')
     def validate_created_at(self, key, value):
@@ -39,9 +33,19 @@ class Litter(Base):
         if getattr(self, key) is not None:
             raise ValueError("The `created_at` field cannot be modified after creation.")
         return value
-    
-# TODO FOR RETRIEVING THE TIMEZONE!!
-# # Assuming `post.created_at` is a timezone-aware datetime in UTC
-# user_timezone = pytz.timezone("America/New_York")  # Example user timezone
-# local_time = post.created_at.astimezone(user_timezone)
-# print(local_time)  # This will display the time converted to the user's timezone
+
+    @validates('size', 'offspring_ids')
+    def validate_litter_size(self, key, value):
+        # Ensure `size` matches the number of `offspring_ids`
+        if key == 'size' and len(self.offspring_ids) != value:
+            raise ValueError("Size must match the number of offspring IDs.")
+        if key == 'offspring_ids' and len(value) != self.size:
+            raise ValueError("The number of offspring IDs must match the size.")
+        return value
+
+    @validates('birth_date')
+    def validate_birth_date(self, key, value):
+        # Ensure `birth_date` is not in the future
+        if value > datetime.now(pytz.UTC):
+            raise ValueError("The birth_date cannot be set to a future date.")
+        return value

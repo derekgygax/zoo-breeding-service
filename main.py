@@ -2,19 +2,19 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 
 # DB models
-from app.models.breeding import Breeding
-from app.models.litter import Litter
+from app.routers.breeding import router as breeding_router
+from app.routers.litter import router as litter_router
 
-# Other routes
-# from app.routers.animals import router as animals_router
+# Other routes from other services possibly?
 
 # Load .env variables in the app
 load_dotenv()
 
 app = FastAPI()
 
-# Register the other routers
-# app.include_router(animals_router)
+# Register the routers
+app.include_router(breeding_router)
+app.include_router(litter_router)
 
 @app.get("/")
 def root():

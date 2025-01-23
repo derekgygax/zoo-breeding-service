@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, func, UniqueConstraint, ForeignKey
+from sqlalchemy import Column, String, Date, DateTime, func, UniqueConstraint, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, validates
 from uuid import uuid4
@@ -12,21 +12,21 @@ from app.database import Base
 #TODO is the relationship for breeding, litter, and offspring right!!
 #TODO the one-to-one here is probabaly wrong!!!
 
-class Breeding(Base):
-    __tablename__ = "breeding"
+class BreedingEvent(Base):
+    __tablename__ = "breeding_event"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    parent_1_id = Column(UUID(as_uuid=True), nullable=False)
-    parent_2_id = Column(UUID(as_uuid=True), nullable=False)
-    occurred_at = Column(DateTime(timezone=True), nullable=False, name="occurred_at")
-    description = Column(String(1000), nullable=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, name="id")
+    parent_1_id = Column(UUID(as_uuid=True), nullable=False, name="parent_1_id")
+    parent_2_id = Column(UUID(as_uuid=True), nullable=False, name="parent_2_id")
+    occurred_at = Column(Date, nullable=False, name="occurred_at")
+    description = Column(String(1000), name="description")
 
     # Timestamps - keep track of when entry was created and updated. maybe need in future
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(pytz.UTC), nullable=False, name="created_at")
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(pytz.UTC), onupdate=func.now(), nullable=False, name="updated_at")
 
     # Relationship to Litter
-    litter = relationship("Litter", back_populates="breeding", cascade="all, delete-orphan")
+    litter = relationship("Litter", back_populates="breeding_event", cascade="all, delete-orphan")
 
     @validates('created_at')
     def validate_created_at(self, key, value):

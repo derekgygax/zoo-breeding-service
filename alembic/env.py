@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 
 # DB models
 from app.database import Base
-from app.models.breeding import Breeding
+from app.models.breeding_event import BreedingEvent
 from app.models.litter import Litter
 
 # Load .env variables

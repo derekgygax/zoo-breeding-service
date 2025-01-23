@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, DateTime, func, Integer, ForeignKey
+from sqlalchemy import Column, String, Date, DateTime, func, Integer, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship, validates
 from uuid import uuid4
@@ -15,11 +15,11 @@ from app.database import Base
 class Litter(Base):
     __tablename__ = "litter"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
-    breeding_id = Column(UUID(as_uuid=True),ForeignKey("breeding.id", ondelete="CASCADE"), unique=True)
-    size = Column(Integer, nullable=False)
-    birth_date = Column(DateTime(timezone=True), nullable=False)
-    description = Column(String(1000), nullable=True)
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, name="id")
+    breeding_event_id = Column(UUID(as_uuid=True), ForeignKey("breeding_event.id", ondelete="CASCADE"), unique=True, name="breeding_event_id")
+    size = Column(Integer, nullable=False, name="size")
+    birth_date = Column(Date, nullable=False, name="birth_date")
+    description = Column(String(1000), nullable=True, name="description")
 
     # Timestamps - keep track of when entry was created and updated. maybe need in future
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(pytz.UTC), nullable=False, name="created_at")
@@ -27,7 +27,7 @@ class Litter(Base):
 
 
     # Relationship to breeding (one-to-one)
-    breeding = relationship("Breeding", back_populates="litter")
+    breeding_event = relationship("BreedingEvent", back_populates="litter")
 
     # Relation to animals in the litter, so the offspring (many-to-many)
     # offspring = relationship("Animal", back_populates="litter", cascade="all, delete")

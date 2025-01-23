@@ -6,25 +6,12 @@ from sqlalchemy.orm import Session
 # database
 from app.database import get_db
 
-# # services
-# from app.services.animals import (
-# 	get_all_animals,
-# 	get_all_animal_identifiers, 
-# 	add_animal as add_animal_service, 
-# 	get_animal_base_by_id as get_animal_base_by_id_service, 
-# 	update_animal as update_animal_service
-# )
-
 # schemas
 from app.schemas.breeding_event.breeding_event import BreedingEvent
 from app.schemas.breeding_event.breeding_event_base import BreedingEventBase
 
 # services
-from app.services.breeding_events import (
-    get_all_breeding_events,
-	get_breeding_event_base_by_id as get_breeding_event_base_by_id_service,
-	add_breeding_event as add_breeding_event_service
-)
+from app.services import breeding_events_service
 
 
 # tags Explanation:
@@ -34,12 +21,12 @@ router = APIRouter(prefix="/api/v1/breeding-events")
 
 @router.get("/", tags=["breeding_event", "breeding_events"], response_model=List[BreedingEvent])
 async def get_breeding_events(db: Session = Depends(get_db)):
-	return get_all_breeding_events(db=db)
+	return breeding_events_service.get_all_breeding_events(db=db)
 
 
-@router.get("/base/{breeding_event_id}", tags=["breeding_event"], response_model=BreedingEventBase)
+@router.get("/{breeding_event_id}/base", tags=["breeding_event"], response_model=BreedingEventBase)
 async def get_breeding_event_base_by_id(breeding_event_id: UUID, db: Session = Depends(get_db)):
-	return get_breeding_event_base_by_id_service(db=db, breeding_event_id=breeding_event_id)
+	return breeding_events_service.get_breeding_event_base_by_id(db=db, breeding_event_id=breeding_event_id)
 
 
 @router.post("/", tags=["breeding_event"], status_code=status.HTTP_201_CREATED, response_model=None)
@@ -47,7 +34,7 @@ async def add_breeding_event(
 	breeding_event_base: BreedingEventBase,
 	db: Session = Depends(get_db)
 ):
-	add_breeding_event_service(db=db, breeding_event_base=breeding_event_base)
+	breeding_events_service.add_breeding_event(db=db, breeding_event_base=breeding_event_base)
 	return
 
 

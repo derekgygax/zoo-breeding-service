@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 
 # models
-from app.models.breeding_event import BreedingEvent
+from app.models.breeding_event import BreedingEvent as BreedingEventORM
 
 # schemas
 from app.schemas.breeding_event.breeding_event import BreedingEvent as BreedingEventSchema
@@ -16,15 +16,15 @@ from app.schemas.breeding_event.breeding_event_base import BreedingEventBase
 # I do NOT know if you can go from the model to the schema like that
 # or if you need a converter!!
 def get_all_breeding_events(db: Session) -> List[BreedingEventSchema]:
-    return db.query(BreedingEvent).all()
+    return db.query(BreedingEventORM).all()
 
 def get_breeding_event_base_by_id(db: Session, breeding_event_id: UUID) -> BreedingEventBase:
-    breeding_event = db.query(BreedingEvent).filter(BreedingEvent.id == breeding_event_id).options(
+    breeding_event = db.query(BreedingEventORM).filter(BreedingEventORM.id == breeding_event_id).options(
         load_only(
-            BreedingEvent.parent_1_id,
-            BreedingEvent.parent_2_id,
-            BreedingEvent.occurred_at,
-            BreedingEvent.description
+            BreedingEventORM.parent_1_id,
+            BreedingEventORM.parent_2_id,
+            BreedingEventORM.occurred_at,
+            BreedingEventORM.description
         )
     ).first()
     
@@ -40,7 +40,7 @@ def add_breeding_event(db: Session, breeding_event_base: BreedingEventBase) -> N
     # The parent validation would have to go to animals-service
     # so that part still needs to be figured out
     
-    db_breeding_event = BreedingEvent(**breeding_event_base.model_dump())
+    db_breeding_event = BreedingEventORM(**breeding_event_base.model_dump())
     # Print the stuff in db_post
     # print(vars(db_animal))
     db.add(db_breeding_event)

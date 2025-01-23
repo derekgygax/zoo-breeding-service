@@ -4,10 +4,28 @@ from pydantic import BaseModel, Field
 from datetime import date
 
 class LitterBase(BaseModel):
-    breeding_id: UUID = Field(..., title="Breeding Event", description="The id for the breeding event producing the litter")
-    size: int = Field(..., title="Size of the Litter", description="The number of offspring in the litter")
-    birth_date: date = Field(..., title="Birth Date", description="Date of birth of the litter")
-    description: str = Field(..., title="Notes", max_length=1000, description="Notes about the litter")
+    breeding_id: UUID = Field(
+        ..., 
+        title="Breeding Event", 
+        description="Breeding event from which this litter resulted."
+    )
+    size: int = Field(
+        ...,
+        title="Number of Offspring",
+        description="How many offspring were in this litter."
+    )
+    birth_date: date= Field(
+        ...,
+        title="Birth Date",
+        description="When the litter was born."
+    )
+    # description: Optional[str] = Field(
+    description: str = Field(
+        ...,
+        title="Litter Description",
+        max_digits=1000,
+        description="Additional notes about this litter's characteristics or status."
+    )
 
     class Config:
         jsonable_encoder = {date: lambda v: v.isoformat()}

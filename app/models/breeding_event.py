@@ -18,7 +18,9 @@ class BreedingEvent(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4, name="id")
     parent_1_id = Column(UUID(as_uuid=True), nullable=False, name="parent_1_id")
     parent_2_id = Column(UUID(as_uuid=True), nullable=False, name="parent_2_id")
-    occurred_at = Column(Date, nullable=False, name="occurred_at")
+    # I am not enteriely sure how datetimes will be handled on the front end. I have just been passing dates back so far
+    # Lets see
+    occurred_at = Column(DateTime(timezone=True), nullable=False, name="occurred_at")
     description = Column(String(1000), name="description")
 
     # Timestamps - keep track of when entry was created and updated. maybe need in future

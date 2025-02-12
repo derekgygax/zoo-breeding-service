@@ -37,12 +37,12 @@ Make sure you have the following installed:
   ```
 
 3. **Set up environment variables**  
-  - Create a `.env` file in the root directory and add the required configuration:  
-    ```ini
-    DATABASE_URL=postgresql://user:password@localhost:5432/zoo_breeding
-    AUTH_SECRET=your_secret_key
-    AUTH_ALGORITHM=your_algorithm
-    ```
+  Create a `.env` file in the root directory and add the required configuration:  
+  ```ini
+  DATABASE_URL=postgresql://user:password@localhost:5432/zoo_breeding
+  AUTH_SECRET=your_secret_key
+  AUTH_ALGORITHM=your_algorithm
+  ```
 
 ---
 

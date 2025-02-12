@@ -19,7 +19,7 @@ from app.services import breeding_events_service
 
 router = APIRouter(prefix="/api/v1/breeding-events")
 
-@router.get("/", tags=["breeding_event", "breeding_events"], response_model=List[BreedingEvent])
+@router.get("", tags=["breeding_event", "breeding_events"], response_model=List[BreedingEvent])
 async def get_breeding_events(db: Session = Depends(get_db)):
 	return breeding_events_service.get_all_breeding_events(db=db)
 

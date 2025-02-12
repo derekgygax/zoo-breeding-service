@@ -20,4 +20,4 @@ app.include_router(litters_router)
 
 @app.get("/")
 def root():
-	return "Welcome to the Zoo Animals Service API"
+	return "Welcome to the Zoo Breeding Service API"

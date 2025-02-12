@@ -17,8 +17,8 @@ This is the **Breeding API** for managing breeding-related data in the zoo manag
 ## Requirements
 
 Make sure you have the following installed:
-- Python 3.12.5
-- pip (Python package manager)
+- Python 3.13.1
+- poetry (Python package manager)
 
 ---
 
@@ -30,18 +30,13 @@ Make sure you have the following installed:
    cd zoo-breeding-service
    ```
 
-2. Create and activate a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+2. Install Dependencies
+Make sure you have **Poetry** installed:
+  ```sh
+  poetry install
+  ```
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. Set up environment variables:
+3. Set up environment variables:
    - Create a `.env` file in the root directory with the necessary configuration.
      Example:
      ```
@@ -56,7 +51,7 @@ Make sure you have the following installed:
 
 1. Start the development server:
    ```bash
-   uvicorn main:app --reload
+   poetry run uvicorn app.main:app --reload --port 8103
    ```
 
 
@@ -88,7 +83,7 @@ zoo-breeding-service/
 
 Run tests using your preferred testing framework (e.g., `pytest`):
 ```bash
-pytest
+poetry run pytest
 ```
 
 ---

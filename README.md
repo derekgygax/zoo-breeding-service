@@ -36,7 +36,42 @@ Make sure you have **Poetry** installed:
   poetry install
   ```
 
-3. Set up environment variables:
+3. VS Code Recognize the Poetry Installs 
+
+By default, VS Code may not detect the virtual environment created by Poetry. Follow these steps to ensure VS Code properly recognizes and uses the Poetry environment:  
+
+### **1. Locate the Poetry Virtual Environment Path**  
+Run the following command to get the path to the Poetry virtual environment:  
+```sh
+poetry env info --path
+```
+
+### **2. Select the Virtual Environment in VS Code**  
+- Open the **Command Palette** (`Cmd + Shift + P` on macOS, `Ctrl + Shift + P` on Windows/Linux).  
+- Search for **"Python: Select Interpreter"** and select it.  
+- Click **"Enter interpreter path"** → **"Find..."**  
+- Paste the path from the command in the first step and press enter
+
+### **3. Set Up the Workspace for Auto-Detection**  
+If VS Code still doesn’t detect the Poetry environment automatically, you can manually specify it in `.vscode/settings.json`:  
+
+```json
+{
+  "python.defaultInterpreterPath": "<PASTE_THE_PATH_HERE>",
+  "python.venvPath": "~/.cache/pypoetry/virtualenvs"
+}
+```
+
+Replace `<PASTE_THE_PATH_HERE>` with the exact path from `poetry env info --path`.  
+
+### **4. Restart VS Code**  
+Close and reopen VS Code, then check that it is using the correct environment by running:  
+```sh
+poetry run python --version
+```  
+This should match the Python version used by your Poetry environment.
+
+4. Set up environment variables:
    - Create a `.env` file in the root directory with the necessary configuration.
      Example:
      ```
